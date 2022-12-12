@@ -11,6 +11,16 @@ cd GWPF
 ```
 pip install -r requirements.txt
 ```
+## Dataset Preparation
+```
+from torchvision import datasets
+datasets.MNIST('./data', train=True, download=True)
+datasets.CIFAR10('./data', train=True, download=True)
+datasets.EMNIST('./data', train=True, download=True, split="balanced")
+```
+WikiText-2 can be downloaded from 
+[https://blog.salesforceairesearch.com/the-wikitext-long-term-dependency-language-modeling-dataset/](https://blog.salesforceairesearch.com/the-wikitext-long-term-dependency-language-modeling-dataset/)
+
 ## Run Simulation
 We use a testbed with [Nvidia DGX-1](https://www.nvidia.cn/data-center/dgx-1/) with 32 CPU cores and 5 Tesla V100 GPUs with 32GB memory each. The CUDA version is 10.2. For the base settings, the number of the illustrative workers in each round of training in our experiments is set to 10.<br>
 
