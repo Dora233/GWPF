@@ -4,11 +4,9 @@ import numpy as np
 import random
 from torch.utils.data import DataLoader, Dataset
 from torchvision import datasets, transforms
-from Utils.Sample import mnist_iid, mnist_noniid, cifar10_iid, cifar10_noniid, cifar100_iid,\
-    cifar100_noniid, emnist_iid, emnist_noniid, wikitext_iid, wikitext_noniid
 
-data_path = '/home/zjlab/yangduo/Overlap-FedAvg-main/data'
-data_path_wiki = '/home/zjlab/yangduo/Overlap-FedAvg-main/data/wikitext-2'
+data_path = '/YOUR_PATH/data'
+data_path_wiki = '/YOUR_PATH/data/wikitext-2'
 #---------------------------------------
 DIRICHLET_ALPHA = 1
 #---------------------------------------
@@ -17,7 +15,6 @@ class DatasetSplit(Dataset):
         self.dataset = dataset
         self.idxs = list(idxs)
         unique, counts = np.unique(np.array(self.dataset.targets)[self.idxs], return_counts=True)
-        #print(dict(zip(unique, counts)))
         random.seed(seed)
         random.shuffle(self.idxs)
 
@@ -29,51 +26,31 @@ class DatasetSplit(Dataset):
         return image, label
 
 def dirichlet_split_noniid(train_labels, alpha, n_clients, seed):
-    '''
-    参数为alpha的Dirichlet分布将数据索引划分为n_clients个子集
-    '''
     n_classes = train_labels.max()+1
     np.random.seed(seed)
     label_distribution = np.random.dirichlet([alpha]*n_clients, n_classes)
-    # (K, N)的类别标签分布矩阵X，记录每个client占有每个类别的多少
 
     class_idcs = [np.argwhere(train_labels==y).flatten() 
            for y in range(n_classes)]
-    # 记录每个K个类别对应的样本下标
 
     client_idcs = [[] for _ in range(n_clients)]
-    # 记录N个client分别对应样本集合的索引
     for c, fracs in zip(class_idcs, label_distribution):
-        # np.split按照比例将类别为k的样本划分为了N个子集
-        # for i, idcs 为遍历第i个client对应样本集合的索引
         for i, idcs in enumerate(np.split(c, (np.cumsum(fracs)[:-1]*len(c)).astype(int))):
             client_idcs[i] += [idcs]
-    # worker = [[]]*n_clients
-    # for i in range(n_clients):
-    #     worker[i] = [len(a) for a in client_idcs[i]]
-    # worker2 = np.array(worker)
-    # np.savetxt('data.txt',worker2)
     client_idcs2 = [np.concatenate(idcs) for idcs in client_idcs]
 
     return client_idcs2
 
 class Dataset_Manager:
-    def __init__(self, dataset_profile): # dataset_name, is_iid, total_partition_number, rank):
+    def __init__(self, dataset_profile): 
         self.dataset_name = dataset_profile['dataset_name']
         self.is_iid = dataset_profile['is_iid']
         self.total_partition_number = dataset_profile['total_partition_number']
         self.partition_rank = dataset_profile['partition_rank']
 
         self.batch_size = 100 if dataset_profile['dataset_name'] != 'ImageNet' else 128
-        #self.logging('create dataset') # no special hyperparameter here for different dataset types
         print('[Dataset Manager]')
         self.train_sampler = None
-
-    # def logging(self, string, hyperparameters=None):
-        # print('['+str(datetime.datetime.now())+'] [Dataset Manager] '+str(string))
-        # if hyperparameters != None:
-            # pprint.pprint(hyperparameters)
-        # sys.stdout.flush()
         
     def partition_dataset(self, seed):
         torch.manual_seed(seed)
@@ -93,26 +70,7 @@ class Dataset_Manager:
                                     transforms.ToTensor(),
                                     transforms.Normalize((0.1307,), (0.3081,))
                                 ]))
-            if self.is_iid:
-                dict_users = mnist_iid(train_set, self.total_partition_number, seed)
-            else:
-                #dict_users = mnist_noniid(train_set, self.total_partition_number, seed)
-                dict_users = dirichlet_split_noniid(np.array(train_set.targets), alpha=DIRICHLET_ALPHA, n_clients=self.total_partition_number, seed=seed)
-        elif self.dataset_name == "fmnist":
-            train_set = datasets.FashionMNIST(data_path, train=True, download=True,
-                                              transform=transforms.Compose([
-                                                  transforms.ToTensor(),
-                                                  transforms.Normalize((0.1307,), (0.3081,))
-                                              ]))
-            test_set = datasets.FashionMNIST(data_path, train=False, download=True,
-                                             transform=transforms.Compose([
-                                                 transforms.ToTensor(),
-                                                 transforms.Normalize((0.1307,), (0.3081,))
-                                             ]))
-            if self.is_iid:
-                dict_users = mnist_iid(train_set, self.total_partition_number, seed)
-            else:
-                dict_users = mnist_noniid(train_set, self.total_partition_number, seed)
+            dict_users = dirichlet_split_noniid(np.array(train_set.targets), alpha=DIRICHLET_ALPHA, n_clients=self.total_partition_number, seed=seed)
         elif self.dataset_name == "cifar10":
             train_set = datasets.CIFAR10(data_path, train=True, download=True,
                                          transform=transforms.Compose([
@@ -128,30 +86,7 @@ class Dataset_Manager:
                                             transforms.ToTensor(),
                                             transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
                                         ]))
-            if self.is_iid:
-                dict_users = cifar10_iid(train_set, self.total_partition_number, seed)
-            else:
-                #dict_users = cifar10_noniid(train_set, self.total_partition_number, seed)
-                dict_users = dirichlet_split_noniid(np.array(train_set.targets), alpha=DIRICHLET_ALPHA, n_clients=self.total_partition_number, seed=seed)
-        elif self.dataset_name == "cifar100":
-            train_set = datasets.CIFAR100(data_path, train=True, download=True,
-                                          transform=transforms.Compose([
-                                              transforms.RandomCrop(32, padding=4),
-                                              transforms.RandomHorizontalFlip(),
-                                              transforms.ToTensor(),
-                                              transforms.Normalize((0.5071, 0.4865, 0.4409), (0.2673, 0.2564, 0.2762)),
-                                          ]))
-            test_set = datasets.CIFAR100(data_path, train=False, download=True,
-                                         transform=transforms.Compose([
-                                             transforms.RandomCrop(32, padding=4),
-                                             transforms.RandomHorizontalFlip(),
-                                             transforms.ToTensor(),
-                                             transforms.Normalize((0.5071, 0.4865, 0.4409), (0.2673, 0.2564, 0.2762)),
-                                         ]))
-            if self.is_iid:
-                dict_users = cifar100_iid(train_set, self.total_partition_number, seed)
-            else:
-                dict_users = cifar100_noniid(train_set, self.total_partition_number, seed)
+            dict_users = dirichlet_split_noniid(np.array(train_set.targets), alpha=DIRICHLET_ALPHA, n_clients=self.total_partition_number, seed=seed)
         elif self.dataset_name == "emnist":
             train_set = datasets.EMNIST(data_path, train=True, download=True, split="balanced",
                                         transform=transforms.Compose([
@@ -166,13 +101,8 @@ class Dataset_Manager:
                                     transforms.Normalize((0.1307,), (0.3081,))
                                 ]))
 
-            if self.is_iid:
-                dict_users = emnist_iid(train_set, self.total_partition_number, seed)
-            else:
-                #dict_users = emnist_noniid(train_set, self.total_partition_number, seed)
-                dict_users = dirichlet_split_noniid(np.array(train_set.targets), alpha=DIRICHLET_ALPHA, n_clients=self.total_partition_number, seed=seed)
+            dict_users = dirichlet_split_noniid(np.array(train_set.targets), alpha=DIRICHLET_ALPHA, n_clients=self.total_partition_number, seed=seed)
         elif self.dataset_name == "wikitext2":
-            #corpus = Corpus("rnn_data/wikitext-2") 
             corpus = Corpus(data_path_wiki)
             train_set, test_set = corpus.train, corpus.test
 
@@ -185,14 +115,11 @@ class Dataset_Manager:
             eval_batch_size = 10
             val_loader = batchify(test_set, eval_batch_size)
         else:
-            #print(self.dataset_name, dict_users)
             train_loader = DataLoader(DatasetSplit(train_set, dict_users[self.partition_rank], seed), batch_size=self.batch_size, shuffle=False)
             val_loader = DataLoader(test_set, batch_size=self.batch_size, shuffle=False)
             print(next(iter(train_loader))[1])
 
-
         return train_loader, val_loader
-
 
 class Dictionary(object):
     def __init__(self):
@@ -212,9 +139,6 @@ class Dictionary(object):
 class Corpus(object):
     def __init__(self, path):
         self.dictionary = Dictionary()
-        # self.train = self.tokenize(os.path.join(path, 'train.txt'))
-        # self.valid = self.tokenize(os.path.join(path, 'valid.txt'))
-        # self.test = self.tokenize(os.path.join(path, 'test.txt'))
         self.train = self.tokenize(os.path.join(path, 'wiki.train.tokens'))
         self.valid = self.tokenize(os.path.join(path, 'wiki.valid.tokens'))
         self.test = self.tokenize(os.path.join(path, 'wiki.test.tokens'))
@@ -251,3 +175,81 @@ def batchify(data, bsz):
     # Evenly divide the data across the bsz batches.
     data = data.view(int(bsz), -1).t().contiguous()
     return data
+
+
+def wikitext_iid(dataset, num_users):
+    data_len = len(dataset)
+    dict_users = []
+    sizes = [1.0 / num_users for _ in range(num_users)]
+    indexes = [x for x in range(0, data_len)]
+    for frac in sizes:
+        part_len = int(frac * data_len)
+        dict_users.append(dataset[indexes[0: part_len]])
+    return dict_users
+
+def wikitext_noniid(dataset, num_users, seed):
+    data_len = len(dataset)
+    dict_users = []
+    sizes = gen_partition(data_len, num_users, seed)
+    indexes = [x for x in range(0, data_len)]
+    for part_len in sizes:
+        dict_users.append(dataset[indexes[0: part_len]])
+    return dict_users
+
+
+def gen_partition(_sum, num_users, seed):
+    _seed = seed
+    mean = _sum / num_users
+    variance = _sum / 2
+
+    min_v = 1
+    max_v = mean + variance
+    array = [min_v] * num_users
+
+    diff = _sum - min_v * num_users
+    while diff > 0:
+        np.random.seed(_seed)
+        a = np.random.randint(0, num_users)
+        if array[a] >= max_v:
+            continue
+        np.random.seed(_seed)
+        delta = np.random.randint(1, diff // 4 + 4)
+        array[a] += delta
+        diff -= delta
+        array[a] += diff if diff < 0 else 0
+        _seed += 2
+    return np.array(array)
+
+
+def iid_part(dataset, num_users, seed):
+    num_items = int(len(dataset) / num_users)
+    dict_users, all_idxs = {}, [i for i in range(len(dataset))]
+    for i in range(num_users):
+        # Random choose num_items images from all images.
+        np.random.seed(seed)
+        dict_users[i] = set(np.random.choice(all_idxs, num_items, replace=False))
+        all_idxs = list(set(all_idxs) - dict_users[i])
+    return dict_users
+
+
+def noniid_part(dataset, num_users, num_shards, num_imgs, seed):
+    idx_shard = [i for i in range(num_shards)]
+    dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
+    idxs = np.arange(num_shards * num_imgs)
+    labels = np.array(dataset.targets)
+
+    # sort labels
+    idxs_labels = np.vstack((idxs, labels))
+    # sort the label by the target value
+    idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
+    idxs = idxs_labels[0, :]
+
+    # divide and assign
+    idx_shard_partition = gen_partition(num_shards, num_users, seed)
+    for i in range(num_users):
+        np.random.seed(seed)
+        rand_set = set(np.random.choice(idx_shard, int(idx_shard_partition[i]), replace=False))
+        idx_shard = list(set(idx_shard) - rand_set)
+        for rand in rand_set:
+            dict_users[i] = np.concatenate((dict_users[i], idxs[rand * num_imgs:(rand + 1) * num_imgs]), axis=0)
+    return dict_users
