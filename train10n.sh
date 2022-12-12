@@ -5,6 +5,7 @@ read -p "Enter dataset_model: " dataset_model
 #E1:dataset_name = 'emnist' model_name = 'VGG11_EMNIST'
 read -p "Enter is_iid: " is_iid
 #T: True F: False
+
 master='localhost'
 workers='localhost localhost localhost localhost localhost localhost localhost localhost localhost localhost'
 echo 'master(coordinator): '$master
