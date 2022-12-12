@@ -26,7 +26,7 @@ We use a testbed with [Nvidia DGX-1](https://www.nvidia.cn/data-center/dgx-1/) w
 
 The GWPF algorithm can be tested with ResNet18 on non-IID CIFAR-10 by:
 ```
-sh train.sh
+sh train10n.sh
 (Enter dataset_model: ) C1
 (Enter is_iid: ) F
 ```
