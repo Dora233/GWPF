@@ -16,6 +16,7 @@ conda install pytorch torchvision torchaudio pytorch-cuda=10.2 -c pytorch
 git clone https://github.com/Dora233/GWPF
 cd GWPF
 ```
+```
 pip install -r requirements.txt
 ```
 ## Dataset Preparation
