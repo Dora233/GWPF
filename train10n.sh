@@ -16,7 +16,7 @@ do
 		world_size=$((world_size+1))
 done
 
-home='/YOUR_PATH/GWPF'
+home='/home/zjlab/yangduo/repro'
 read -p "Specify allocated GPU-ID (world_size: $world_size): " cuda 
 trial_no=$(ls $home/Logs/ | wc -l)
 log_dir=$home/Logs/${trial_no}_${dataset_model}_${is_iid}

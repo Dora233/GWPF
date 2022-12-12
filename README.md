@@ -9,6 +9,12 @@ cd GWPF
 ```
 ## Installation
 ```
+conda create -n yourname python=3.8
+conda activate yourname
+```
+Find your install command in PyTorch official website: [https://pytorch.org/](https://pytorch.org/)
+```
+conda install pytorch torchvision torchaudio pytorch-cuda=10.2 -c pytorch
 pip install -r requirements.txt
 ```
 ## Dataset Preparation
@@ -22,11 +28,12 @@ WikiText-2 can be downloaded from
 [https://blog.salesforceairesearch.com/the-wikitext-long-term-dependency-language-modeling-dataset/](https://blog.salesforceairesearch.com/the-wikitext-long-term-dependency-language-modeling-dataset/)
 
 ## Run Simulation
-We use a testbed with [Nvidia DGX-1](https://www.nvidia.cn/data-center/dgx-1/) with 32 CPU cores and 5 Tesla V100 GPUs with 32GB memory each. The CUDA version is 10.2. For the base settings, the number of the illustrative workers in each round of training in our experiments is set to 10.<br>
+We use a testbed with [Nvidia DGX-1](https://www.nvidia.cn/data-center/dgx-1/) with 32 CPU cores and 5 Tesla V100 GPUs with 32GB memory each. The CUDA version is 10.2 and Python version is 3.8. For the base settings, the number of the illustrative workers in each round of training in our experiments is set to 10.<br>
 
 The GWPF algorithm can be tested with ResNet18 on non-IID CIFAR-10 by:
 ```
 sh train10n.sh
 (Enter dataset_model: ) C1
 (Enter is_iid: ) F
+(Specify allocated GPU-ID (world_size: 10): ) 0
 ```

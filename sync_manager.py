@@ -169,8 +169,8 @@ class Sync_Manager:
         print('self.world_size1',self.world_size)
         self.init_dist(sync_profile['dist_profile'])
         print('self.world_size2',self.world_size)
+        interlayer_type = sync_profile['interlayer_type']
         self.transmit_interlayer = GWPF_Interlayer(self.model, self.sync_frequency, InterlayerProfileDict[interlayer_type], self.world_size)
-        self.interlayer_type = sync_profile['interlayer_type']
 
     def logging(self, string):
         print('['+str(datetime.datetime.now())+'] [Sync Manager] '+str(string))

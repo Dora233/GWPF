@@ -1,5 +1,5 @@
 import torch, torchvision
-from models import CNN, LSTM, ResNet, VGG, AlexNet, DenseNet, LogisticRegression,Transformer
+from models import CNN,ResNet,VGG,Transformer
 import os, datetime, sys, pprint
 
 CUDA = torch.cuda.is_available()
