@@ -5,8 +5,8 @@ import random
 from torch.utils.data import DataLoader, Dataset
 from torchvision import datasets, transforms
 
-data_path = '/home/zjlab/yangduo/Overlap-FedAvg-main/data'
-data_path_wiki = '/home/zjlab/yangduo/Overlap-FedAvg-main/data/wikitext-2'
+data_path = '/YOURdataPATH/data'
+data_path_wiki = '/YOURdataPATH/data/wikitext-2'
 #---------------------------------------
 DIRICHLET_ALPHA = 1
 #---------------------------------------
