@@ -12,7 +12,7 @@ conda create -n yourname python=3.8
 conda activate yourname
 conda install pytorch==1.6.0 torchvision==0.7.0 cudatoolkit==10.2 cudnn==7.6.5 nccl==2.9.9.1
 ```
-Find your own install command in PyTorch official website: [https://pytorch.org/](https://pytorch.org/)
+Find your own install command in PyTorch official website: [https://pytorch.org/](https://pytorch.org/) , and note that the versions of packages should correspond to each other.
 ## Cloning
 ```
 git clone https://github.com/Dora233/GWPF
