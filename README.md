@@ -10,9 +10,6 @@ conda create -n yourname python=3.8
 conda activate yourname
 ```
 Find your install command in PyTorch official website: [https://pytorch.org/](https://pytorch.org/)
-```
-conda install pytorch torchvision torchaudio pytorch-cuda=10.2 -c pytorch
-```
 ## Cloning
 ```
 git clone https://github.com/Dora233/GWPF
