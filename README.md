@@ -29,7 +29,7 @@ WikiText-2 can be downloaded from
 [https://blog.salesforceairesearch.com/the-wikitext-long-term-dependency-language-modeling-dataset/](https://blog.salesforceairesearch.com/the-wikitext-long-term-dependency-language-modeling-dataset/)
 
 ## Run Simulation
-The GWPF algorithm can be tested with ResNet18 on non-IID CIFAR-10 by:
+The GWPF algorithm can be tested with ResNet-18 on non-IID CIFAR-10 by:
 ```
 sh train10n.sh
 (Enter dataset_model: ) C1
