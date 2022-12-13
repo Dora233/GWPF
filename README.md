@@ -12,7 +12,12 @@ conda create -n yourname python=3.8
 conda activate yourname
 conda install pytorch==1.6.0 torchvision==0.7.0 cudatoolkit==10.2 cudnn==7.6.5 nccl==2.9.9.1
 ```
-Find your own install command in PyTorch official website: [https://pytorch.org/](https://pytorch.org/) , and note that the versions of packages should correspond to each other.
+Note that the versions of packages should correspond to each other.<br>
+Find your own install command in the official website of [PyTorch]: (https://pytorch.org/get-started/previous-versions/).<br>
+The versions of the following packages can be found on the NVIDIA official website:<br>
+[CUDA Toolkit]: (https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html)<br>
+[cuDNN]: (https://developer.nvidia.com/rdp/cudnn-archive)<br>
+[NCCL]: (https://docs.nvidia.com/deeplearning/nccl/release-notes/index.html)
 ## Cloning
 ```
 git clone https://github.com/Dora233/GWPF
@@ -20,6 +25,7 @@ cd GWPF
 ```
 ## Dataset Preparation
 ```
+python
 from torchvision import datasets
 datasets.MNIST('./data', train=True, download=True)
 datasets.CIFAR10('./data', train=True, download=True)
