@@ -27,7 +27,7 @@ datasets.EMNIST('./data', train=True, download=True, split="balanced")
 ```
 WikiText-2 can be downloaded from 
 [https://blog.salesforceairesearch.com/the-wikitext-long-term-dependency-language-modeling-dataset/](https://blog.salesforceairesearch.com/the-wikitext-long-term-dependency-language-modeling-dataset/)<br>
-Remember to modify "YOURPATH" in train10n.sh and "YOURdataPATH" in Dataloader.py.
+Remember to modify "/YOURPATH/" in train10n.sh and "/YOURdataPATH/" in Dataloader.py.
 
 ## Run Simulation
 The GWPF algorithm can be tested with ResNet-18 on non-IID CIFAR-10 by:
