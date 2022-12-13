@@ -13,11 +13,11 @@ conda activate yourname
 conda install pytorch==1.6.0 torchvision==0.7.0 cudatoolkit==10.2 cudnn==7.6.5 nccl==2.9.9.1
 ```
 Note that the versions of packages should correspond to each other.<br>
-Find your own install command in the official website of [PyTorch: ](https://pytorch.org/get-started/previous-versions/).<br>
+Find your own install command in the official website of PyTorch: [https://pytorch.org/get-started/previous-versions/](https://pytorch.org/get-started/previous-versions/).<br>
 The versions of the following packages can be found on the NVIDIA official website:<br>
-[CUDA Toolkit: ](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html)<br>
-[cuDNN: ](https://developer.nvidia.com/rdp/cudnn-archive)<br>
-[NCCL: ](https://docs.nvidia.com/deeplearning/nccl/release-notes/index.html)
+CUDA Toolkit: [https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html)<br>
+cuDNN: [https://developer.nvidia.com/rdp/cudnn-archive](https://developer.nvidia.com/rdp/cudnn-archive)<br>
+NCCL: [https://docs.nvidia.com/deeplearning/nccl/release-notes/index.html](https://docs.nvidia.com/deeplearning/nccl/release-notes/index.html)
 ## Cloning
 ```
 git clone https://github.com/Dora233/GWPF
