@@ -13,7 +13,7 @@ conda activate yourname
 conda install pytorch==1.6.0 torchvision==0.7.0 cudatoolkit==10.2
 ```
 Find your own install command in the official website of PyTorch: [https://pytorch.org/get-started/previous-versions/](https://pytorch.org/get-started/previous-versions/).<br>
-The versions and installation methods of the following packages can be found on the following NVIDIA official website. Note that the versions of packages should correspond to each other.<br>
+The versions and installation methods of the following packages can be found on NVIDIA official website. Note that the versions of packages should correspond to each other.<br>
 CUDA Toolkit: [https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html)<br>
 cuDNN: [https://developer.nvidia.com/rdp/cudnn-archive](https://developer.nvidia.com/rdp/cudnn-archive)<br>
 NCCL: [https://developer.nvidia.com/nccl/nccl-legacy-downloads](https://developer.nvidia.com/nccl/nccl-legacy-downloads)<br>
