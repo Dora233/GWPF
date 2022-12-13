@@ -19,8 +19,6 @@ git clone https://github.com/Dora233/GWPF
 cd GWPF
 pip install -r requirements.txt
 ```
-The torch in requirements.txt is version 1.6.0 for cuda10.2. <br>
-If the cuda you installed is version 11.0 and above, you need to update torch and torchvision to the corresponding version, please refer to the official website: [https://pytorch.org/get-started/previous-versions/](https://pytorch.org/get-started/previous-versions/)
 ## Dataset Preparation
 ```
 from torchvision import datasets
