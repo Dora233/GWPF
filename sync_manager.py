@@ -12,7 +12,7 @@ InterlayerProfileDict = {
     'GWPF': {
         'freezing_check_frequency' : 1,
         'ema_alpha' : 0.99,
-        'stable_threshold_GWPF' : 0.02,
+        'stable_threshold_GWPF' : 0.5,
         'enable_random_freezing' : False
     }
 }
