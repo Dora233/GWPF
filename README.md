@@ -49,3 +49,6 @@ sh train10n.sh
 #Deploy all workers starting from gpu 0.
 ```
 The generated log files are in "GWPF/Logs/".
+
+## Acknowledgements
+We appreciate the help from Chen Chen, Xu Hong, Wang Wei, Li Baochun, Li Bo, Chen Li and Zhang Gong for their ICDCS'21 paper [Communication-Efficient Federated Learning with Adaptive Parameter Freezing](https://ieeexplore.ieee.org/document/9546506). <br>
